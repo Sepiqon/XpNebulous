@@ -13,7 +13,7 @@ export class AppComponent {
   days=0;
   target=0;
   xpbday=0;
-  freezer=0;
+  freezer=500;
 
 
   ngOnInit(): void {
