@@ -290,7 +290,7 @@
   }
 </style>
 <div style="margin: auto; ">
-  <mat-card style="width: 100%; height:7em; float:inline-start; margin-top: 25px; margin-bottom: 25xp; background-color: #343535; color: #c2c3c4;">
+  <mat-card style="width: 100%; height:25vh; float:inline-start; margin-top: 25px; margin-bottom: 25xp; ">
     <mat-card-title>
       Dane wejściowe
     </mat-card-title>
@@ -298,7 +298,7 @@
       <p style="float:left; font-size: medium; margin: 10px;">
         Ilość xp:
       </p>
-      <input style="float:right" (input)="xpCh()" min ="0"  [(ngModel)]="xp" type="number">
+      <app-NumericInput [min] ="0" [max]="1000000000000" [value]="this.xp" (changeValue)="xpCh($event)" style="float:right"></app-NumericInput>
     </mat-card-footer>
     <mat-card-footer style="float: left; margin: auto;">
       <p style="float:left; font-size: medium; margin: 10px;">
@@ -307,11 +307,13 @@
 
 
       <mat-button-toggle-group style="float:right;" name="fontStyle" aria-label="Font Style">
-        <input type="number" [(ngModel)]="lvls" (input)="lvlsCh()" step="0.01" max="100" min="0" style="float:right;">
+        <app-NumericInput [min] ="0" [miejscapoprzecinku]="2" [max]="100"  [value]="this.lvls" (changeValue)="lvlsCh($event)" style="float:right"></app-NumericInput>
+
         <p style="float:right; font-size: larger; margin: 5px;">
           %
         </p>
-        <input  type="number" [(ngModel)]="lvl" (input)="lvlCh()" min="1" style="float:right;">
+        <app-NumericInput [min] ="1" [miejscapoprzecinku]="0" [max]="10000"  [value]="this.lvl" (changeValue)="lvlCh($event)" style="float:right"></app-NumericInput>
+
       </mat-button-toggle-group>
 
       <div style="float:right;">
@@ -321,7 +323,7 @@
     </mat-card-footer>
 
   </mat-card>
-  <mat-card style="width: 100%; height:7em; float:inline-start; margin-top: 25px; margin-bottom: 25xp; background-color: #343535; color: #c2c3c4;">
+  <mat-card style="width: 100%; height:23vh;; float:inline-start; margin-top: 25px; margin-bottom: 25xp; ">
     <mat-card-title>
       Dane expienia
     </mat-card-title>
@@ -329,17 +331,19 @@
       <p style="float:left; font-size: medium; margin: 10px;">
         Ilość xp'a w ciągu 1 dnia
       </p>
-      <input style="float:right;" [(ngModel)]="xpbday" (input)="xpbdayCh()" type="number">
+      <app-NumericInput [min] ="0" [miejscapoprzecinku]="0" [max]="100000000"  [value]="this.xpbday" (changeValue)="xpbdayCh($event)" style="float:right"></app-NumericInput>
+
     </mat-card-footer>
     <mat-card-footer style="float: left; margin: auto;">
       <p style="float:left; font-size: medium; margin: 10px;">
         Cel (lvl)
       </p>
-      <input style="float:right;" [(ngModel)]="target" (input)="targetCh()" type="number">
+      <app-NumericInput [min] ="1" [miejscapoprzecinku]="0" [max]="10000"  [value]="this.target" (changeValue)="targetCh($event)" style="float:right"></app-NumericInput>
+
     </mat-card-footer>
 
   </mat-card>
-  <mat-card style="width: 100%; height:5em; float:inline-start; margin-top: 25px; margin-bottom: 25xp; background-color: #343535; color: #c2c3c4;">
+  <mat-card style="width: 100%; height:15vh;; float:inline-start; margin-top: 25px; margin-bottom: 25xp; ">
     <mat-card-title>
       Dane wyjściowe
     </mat-card-title>
@@ -347,13 +351,14 @@
       <p style="float:left; font-size: medium; margin: 10px;">
         Ilość dni xp'ienia
       </p>
-      <input style="float:right;" [(ngModel)]="days" type="number">
+      <app-NumericInput [min] ="0" [miejscapoprzecinku]="0" [max]="100000"  [value]="this.days" style="float:right"></app-NumericInput>
     </mat-card-footer>
 
   </mat-card>
 </div>
-<p style="color: white;">
+<p style="color: rgb(0, 0, 0);">
   Opensource:
   <a href="https://github.com/Sepiqon/XpNebulous">XpNebulous</a>
 </p>
+
 <router-outlet></router-outlet>
