@@ -9,9 +9,10 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { FormsModule } from '@angular/forms';
 import { NumericInputComponent } from './NumericInput/NumericInput.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
-  declarations: [	
+  declarations: [
     AppComponent,
       NumericInputComponent
    ],
@@ -21,7 +22,8 @@ import { NumericInputComponent } from './NumericInput/NumericInput.component';
     BrowserAnimationsModule,
     MatCardModule,
     MatButtonToggleModule,
-    FormsModule
+    FormsModule,
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

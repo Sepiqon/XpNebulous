@@ -27,18 +27,23 @@ export class NumericInputComponent implements OnInit , AfterContentInit {
 
 
   handleMinus() {
-    this.value = this.naprawCyfryMinus(
-      this.value -
-      Math.pow(10,0-this.miejscapoprzecinku)
-    );
-    this.changeValue.emit(this.value);
+    if(this.value > this.min){
+      this.value = this.naprawCyfryMinus(
+        this.value -
+        Math.pow(10,0-this.miejscapoprzecinku)
+      );
+      this.changeValue.emit(this.value);
+    }
+
   }
   handlePlus() {
+    if(this.value < this.max){
     this.value = this.naprawCyfryPlus(
       this.value +
       Math.pow(10,0-this.miejscapoprzecinku)
     );
     this.changeValue.emit(this.value);
+    }
   }
   naprawCyfryPlus(num:number){
     return Math.round(num * Math.pow(10,this.miejscapoprzecinku)) / Math.pow(10,this.miejscapoprzecinku);
