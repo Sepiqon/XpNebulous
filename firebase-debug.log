@@ -1,0 +1,71 @@
+[debug] [2021-02-20T17:09:08.377Z] ----------------------------------------------------------------------
+[debug] [2021-02-20T17:09:08.379Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\RyZen\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy
+[debug] [2021-02-20T17:09:08.379Z] CLI Version:   9.4.0
+[debug] [2021-02-20T17:09:08.380Z] Platform:      win32
+[debug] [2021-02-20T17:09:08.380Z] Node Version:  v14.15.5
+[debug] [2021-02-20T17:09:08.381Z] Time:          Sat Feb 20 2021 18:09:08 GMT+0100 (czas środkowoeuropejski standardowy)
+[debug] [2021-02-20T17:09:08.381Z] ----------------------------------------------------------------------
+[debug] [2021-02-20T17:09:08.381Z] 
+[debug] [2021-02-20T17:09:08.389Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2021-02-20T17:09:08.390Z] > authorizing via signed-in user
+[debug] [2021-02-20T17:09:08.390Z] [iam] checking project sepiqon for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2021-02-20T17:09:08.392Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/sepiqon:testIamPermissions  
+ {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2021-02-20T17:09:09.237Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sat, 20 Feb 2021 17:09:30 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","server-timing":"gfet4t7; dur=626","alt-svc":"h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2021-02-20T17:09:09.240Z] > refreshing access token with scopes: []
+[debug] [2021-02-20T17:09:09.240Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2021-02-20T17:09:09.493Z] <<< HTTP RESPONSE 200 {"date":"Sat, 20 Feb 2021 17:09:30 GMT","pragma":"no-cache","expires":"Mon, 01 Jan 1990 00:00:00 GMT","cache-control":"no-cache, no-store, max-age=0, must-revalidate","content-type":"application/json; charset=utf-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","server":"scaffolding on HTTPServer2","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2021-02-20T17:09:09.500Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/sepiqon [none]
+[debug] [2021-02-20T17:09:09.852Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/sepiqon 200
+[debug] [2021-02-20T17:09:09.853Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/sepiqon {"projectId":"sepiqon","projectNumber":"674235983659","displayName":"Sepiqon","name":"projects/sepiqon","resources":{"hostingSite":"sepiqon","realtimeDatabaseInstance":"sepiqon","storageBucket":"sepiqon.appspot.com","locationId":"europe-west2"},"state":"ACTIVE"}
+[info] 
+[info] === Deploying to 'sepiqon'...
+[info] 
+[info] i  deploying hosting 
+[debug] [2021-02-20T17:09:09.861Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2021-02-20T17:09:09.861Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2021-02-20T17:09:10.094Z] <<< HTTP RESPONSE 200 {"cache-control":"no-cache, no-store, max-age=0, must-revalidate","expires":"Mon, 01 Jan 1990 00:00:00 GMT","pragma":"no-cache","date":"Sat, 20 Feb 2021 17:09:31 GMT","content-type":"application/json; charset=utf-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","server":"scaffolding on HTTPServer2","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2021-02-20T17:09:10.099Z] >>> HTTP REQUEST POST https://firebasehosting.googleapis.com/v1beta1/sites/sepiqon/versions  
+ {"config":{},"labels":{"deployment-tool":"cli-firebase"}}
+[debug] [2021-02-20T17:09:11.376Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sat, 20 Feb 2021 17:09:32 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[info] i  hosting[sepiqon]: beginning deploy... 
+[info] i  hosting[sepiqon]: found 8 files in dist/NebulousXp 
+[debug] [2021-02-20T17:09:11.393Z] > refreshing access token with scopes: []
+[debug] [2021-02-20T17:09:11.393Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2021-02-20T17:09:11.395Z] [hosting] hash cache [ZGlzdFxOZWJ1bG91c1hw] stored for 8 files
+[debug] [2021-02-20T17:09:11.396Z] [hosting][hash queue][FINAL] {"max":1,"min":0,"avg":0,"active":0,"complete":8,"success":8,"errored":0,"retried":0,"total":8,"elapsed":6}
+[debug] [2021-02-20T17:09:11.605Z] <<< HTTP RESPONSE 200 {"date":"Sat, 20 Feb 2021 17:09:32 GMT","cache-control":"no-cache, no-store, max-age=0, must-revalidate","expires":"Mon, 01 Jan 1990 00:00:00 GMT","pragma":"no-cache","content-type":"application/json; charset=utf-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","server":"scaffolding on HTTPServer2","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2021-02-20T17:09:11.611Z] >>> [apiv2][query] POST https://firebasehosting.googleapis.com/v1beta1/sites/sepiqon/versions/9b6704e1b2506a62:populateFiles [none]
+[debug] [2021-02-20T17:09:11.611Z] >>> [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/sites/sepiqon/versions/9b6704e1b2506a62:populateFiles {"files":{"/3rdpartylicenses.txt":"2b9735c718a3eddc462c0a05ecb46ebe43559ad3c761c34fea08d6ba4f3af0fa","/favicon.ico":"2c19690e9587bae12f419b34d2edeecc76808099540a9c9f4ea6194116cfc8f7","/index.html":"b2609ba59d3421e3fc1a6683376e7ad74262093bf9acc09ade8d4c8e53757caa","/main.b4d57cbb75ad6c9640f6.js":"10a2923222e1b59bb875f0c655ceeb6ad63a0f37ba6772dc169e857fc3cff864","/polyfills.0554a17d705ef6bc58ce.js":"7b8d6d143bb9fe55599716ca8b22d0d21c8589b7a803743a7069645297bfe5b4","/runtime.7b63b9fd40098a2e8207.js":"8351e28e6622d0d4825d766649b2ae0e8767c34304fff594f102bfe52b7e4e29","/scripts.568694a568f45ab03c95.js":"fb3f49998f9d029a68302e394e5333c53be8fad9f2fa43e7a003ad859161d67e","/styles.517cf217e9abc8d2d122.css":"3eed81098d7ff9c52a6760257de6f3d6e905afbaa488b2fe43a6f8af34d21184"}}
+[debug] [2021-02-20T17:09:12.623Z] <<< [apiv2][status] POST https://firebasehosting.googleapis.com/v1beta1/sites/sepiqon/versions/9b6704e1b2506a62:populateFiles 200
+[debug] [2021-02-20T17:09:12.623Z] <<< [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/sites/sepiqon/versions/9b6704e1b2506a62:populateFiles {"uploadUrl":"https://upload-firebasehosting.googleapis.com/upload/sites/sepiqon/versions/9b6704e1b2506a62/files"}
+[debug] [2021-02-20T17:09:12.623Z] [hosting][populate queue][FINAL] {"max":1230,"min":1230,"avg":1230,"active":0,"complete":1,"success":1,"errored":0,"retried":0,"total":1,"elapsed":1230}
+[debug] [2021-02-20T17:09:12.624Z] [hosting] uploads queued: 0
+[debug] [2021-02-20T17:09:12.624Z] [hosting][upload queue][FINAL] {"max":0,"min":9999999999,"avg":0,"active":0,"complete":0,"success":0,"errored":0,"retried":0,"total":0,"elapsed":1613840952624}
+[info] +  hosting[sepiqon]: file upload complete 
+[debug] [2021-02-20T17:09:12.625Z] [hosting] deploy completed after 1247ms
+[debug] [2021-02-20T17:09:12.626Z] [
+  {
+    "config": {
+      "public": "dist/NebulousXp",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "site": "sepiqon"
+    },
+    "site": "sepiqon",
+    "version": "sites/sepiqon/versions/9b6704e1b2506a62"
+  }
+]
+[info] i  hosting[sepiqon]: finalizing version... 
+[debug] [2021-02-20T17:09:12.628Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2021-02-20T17:09:12.628Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2021-02-20T17:09:12.839Z] <<< HTTP RESPONSE 200 {"date":"Sat, 20 Feb 2021 17:09:33 GMT","cache-control":"no-cache, no-store, max-age=0, must-revalidate","pragma":"no-cache","expires":"Mon, 01 Jan 1990 00:00:00 GMT","content-type":"application/json; charset=utf-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","server":"scaffolding on HTTPServer2","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2021-02-20T17:09:12.844Z] >>> HTTP REQUEST PATCH https://firebasehosting.googleapis.com/v1beta1/sites/sepiqon/versions/9b6704e1b2506a62?updateMask=status  
+ {"status":"FINALIZED"}

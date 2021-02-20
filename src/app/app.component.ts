@@ -1,6 +1,11 @@
 import { Player } from './model/Player';
 import { Component } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+
+import { ConfigurableFocusTrap } from '@angular/cdk/a11y';
+import Pusher, { AuthorizerCallback } from 'pusher-js';
+
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -20,7 +25,20 @@ export class AppComponent {
   constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
+    const pusher = new Pusher("da37d9a35767b2fde1b7"
+    ,{cluster: "eu"});
+    Pusher.logToConsole = true;
+   var channel = pusher.subscribe("wiadomosci");
+   var callback = function(eventName:any, data:any) {
+    alert(`The event ${eventName} was triggered with data ${JSON.stringify(data)}`);
+  };
+
+   channel.bind_global(callback);
+
 	}
+  test22(){
+
+  }
 
 	ngAfterViewInit(): void {
 		// afterViewInit code.
@@ -30,11 +48,13 @@ export class AppComponent {
 	init(): void {
     this.idCh(this.id);
 
+    //https://proxy-sepiqon.herokuapp.com/ws
+    //{"c":"wiadomosci","e":"my-event","b":{"message":"a"}}
+
+
 
   }
   xpCh(xpc: number): number {
-
-
 
 
 
