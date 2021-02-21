@@ -6,10 +6,11 @@ import Pusher, { AuthorizerCallback } from 'pusher-js';
   providedIn: 'root'
 })
 export class WsService {
-
+  context={};
   constructor() {
      this.pusher = new Pusher("da37d9a35767b2fde1b7"
     ,{cluster: "eu"});
+    //Pusher.logToConsole=true;
   }
   pusher:Pusher;
   send(model:any,event:string,channel:string){
@@ -25,7 +26,9 @@ export class WsService {
     xhrr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     xhrr.send(JSON.stringify(ws));
   }
-  connect(c:string,){
-   var channel = this.pusher.subscribe(c);
+  connect(channnel:string,event:string,callback:Function){
+   var channel = this.pusher.subscribe(channnel);
+   channel.bind(event, callback, this.context);
   }
+
 }

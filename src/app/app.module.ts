@@ -10,11 +10,16 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { FormsModule } from '@angular/forms';
 import { NumericInputComponent } from './NumericInput/NumericInput.component';
 import { HttpClientModule } from '@angular/common/http';
+import { ChatComponent } from './chat/chat.component';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { NebulousxpComponent } from './nebulousxp/nebulousxp.component';
 
 @NgModule({
-  declarations: [
+  declarations: [	
     AppComponent,
-      NumericInputComponent
+      NumericInputComponent,
+      ChatComponent,
+      NebulousxpComponent
    ],
   imports: [
     BrowserModule,
@@ -24,6 +29,7 @@ import { HttpClientModule } from '@angular/common/http';
     MatButtonToggleModule,
     FormsModule,
     HttpClientModule,
+    NgbModule
   ],
   providers: [],
   bootstrap: [AppComponent]

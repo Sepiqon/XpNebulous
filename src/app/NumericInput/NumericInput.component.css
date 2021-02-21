@@ -18,7 +18,7 @@ input[type=number]::-webkit-outer-spin-button {
 .wrapper {
   border: 2px #dcd3d3 solid;
   width: 300px;
-  height: 25px;
+  height: 40px;
   padding: 5px;
   display: flex;
   border-radius: 15px;

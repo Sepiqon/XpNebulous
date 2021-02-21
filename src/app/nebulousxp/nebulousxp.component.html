@@ -1,0 +1,81 @@
+
+<div style="margin: auto; ">
+  <mat-card style="width: auto; height:350px; float:inline-start; margin-top: 25px; margin-bottom: 25xp; ">
+    <mat-card-title>
+      Dane wejściowe
+    </mat-card-title>
+    <mat-card-footer style="float:left; margin: auto;">
+      <p style="float:left; font-size: medium; margin: 10px;">
+        Twoje id:
+      </p>
+      <app-NumericInput [min] ="0" [max]="1000000000" [value]="this.id" (changeValue)="idCh($event)" style="float:right"></app-NumericInput>
+    </mat-card-footer>
+    <mat-card-footer style="float:left; margin: auto;">
+      <p style="float:left; font-size: medium; margin: 10px;">
+        Ilość xp:
+      </p>
+      <app-NumericInput [min] ="0" [max]="1000000000000" [value]="this.xp" (changeValue)="xpCh($event)" style="float:right"></app-NumericInput>
+    </mat-card-footer>
+    <mat-card-footer style="float: left; margin: auto;">
+      <p style="float:left; font-size: medium; margin: 10px;">
+        Level:
+      </p>
+
+
+      <mat-button-toggle-group style="float:right;" name="fontStyle" aria-label="Font Style">
+        <app-NumericInput [min] ="0" [miejscapoprzecinku]="2" [max]="100"  [value]="this.lvls" (changeValue)="lvlsCh($event)" style="float:right"></app-NumericInput>
+
+        <p style="float:right; font-size: larger; margin: 5px;">
+          %
+        </p>
+        <app-NumericInput [min] ="1" [miejscapoprzecinku]="0" [max]="10000"  [value]="this.lvl" (changeValue)="lvlCh($event)" style="float:right"></app-NumericInput>
+
+      </mat-button-toggle-group>
+
+      <div style="float:right;">
+
+
+      </div>
+    </mat-card-footer>
+
+  </mat-card>
+  <mat-card style="width: auto; height:200px;; float:inline-start; margin-top: 25px; margin-bottom: 25xp; ">
+    <mat-card-title>
+      Dane expienia
+    </mat-card-title>
+    <mat-card-footer style="float:left; margin: auto;">
+      <p style="float:left; font-size: medium; margin: 10px;">
+        Ilość xp'a w ciągu 1 dnia
+      </p>
+      <app-NumericInput [min] ="0" [miejscapoprzecinku]="0" [max]="100000000"  [value]="this.xpbday" (changeValue)="xpbdayCh($event)" style="float:right"></app-NumericInput>
+
+    </mat-card-footer>
+    <mat-card-footer style="float: left; margin: auto;">
+      <p style="float:left; font-size: medium; margin: 10px;">
+        Cel (lvl)
+      </p>
+      <app-NumericInput [min] ="1" [miejscapoprzecinku]="0" [max]="10000"  [value]="this.target" (changeValue)="targetCh($event)" style="float:right"></app-NumericInput>
+
+    </mat-card-footer>
+
+  </mat-card>
+  <mat-card style="width: auto; height:150px; float:inline-start; margin-top: 25px; margin-bottom: 25xp; ">
+    <mat-card-title>
+      Dane wyjściowe
+    </mat-card-title>
+    <mat-card-footer style="float:left; margin: auto;">
+      <p style="float:left; font-size: medium; margin: 10px;">
+        Ilość dni xp'ienia
+      </p>
+      <app-NumericInput [min] ="0" [miejscapoprzecinku]="0" [max]="100000"  [value]="this.days" style="float:right"></app-NumericInput>
+    </mat-card-footer>
+
+  </mat-card>
+
+</div>
+<p style="color: rgb(0, 0, 0);">
+  Opensource:
+  <a href="https://github.com/Sepiqon/XpNebulous">XpNebulous</a>
+</p>
+
+
