@@ -1,9 +1,12 @@
+import { PlayerModel } from './model/PlayerModel';
 import { Player } from './model/Player';
 import { Component } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
 import { ConfigurableFocusTrap } from '@angular/cdk/a11y';
 import Pusher, { AuthorizerCallback } from 'pusher-js';
+import { Ws } from './model/Ws';
+import { WsService } from './ws.service';
 
 
 @Component({
@@ -22,18 +25,10 @@ export class AppComponent {
   freezer=500;
   id=6573801;
   test="WyĹ›wietla siÄ™";
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private ws:WsService) { }
 
   ngOnInit(): void {
-    const pusher = new Pusher("da37d9a35767b2fde1b7"
-    ,{cluster: "eu"});
-    Pusher.logToConsole = true;
-   var channel = pusher.subscribe("wiadomosci");
-   var callback = function(eventName:any, data:any) {
-    alert(`The event ${eventName} was triggered with data ${JSON.stringify(data)}`);
-  };
 
-   channel.bind_global(callback);
 
 	}
   test22(){
@@ -47,12 +42,6 @@ export class AppComponent {
 
 	init(): void {
     this.idCh(this.id);
-
-    //https://proxy-sepiqon.herokuapp.com/ws
-    //{"c":"wiadomosci","e":"my-event","b":{"message":"a"}}
-
-
-
   }
   xpCh(xpc: number): number {
 
@@ -95,29 +84,29 @@ export class AppComponent {
     this.days = Math.floor((Math.pow(this.target-1,2)*this.freezer-this.xp)/this.xpbday)+1
     return this.target;
   }
-  idCh(idc:number){
+  async idCh(idc:number){
     this.id = idc;
     var data = "Game=Nebulous&Version=447&AccountId="+this.id;;
-
     var xhr = new XMLHttpRequest();
     xhr.withCredentials = true;
     var that = this;
-    xhr.addEventListener("readystatechange", function() {
+    let d:PlayerModel;
+    d=new PlayerModel();
+
+    xhr.addEventListener("readystatechange",async function() {
       if(this.readyState === 4) {
-        var d:Player;
-        d= JSON.parse(this.responseText);
+
+        d= JSON.parse(this.responseText) as PlayerModel;
+
         that.xpCh(d.XP);
+        that.ws.send({id:d.AccountID, nick: d.AccountName,lvl: that.lvl},"my-event","wiadomosci");
       }
     });
-
     xhr.open("POST", "https://proxy-sepiqon.herokuapp.com/https://www.simplicialsoftware.com/api/account/GetPlayerStats",true);
     xhr.withCredentials = false;
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-
-
-    xhr.onreadystatechange = function() { // Call a function when the state changes.
-
-  }
     xhr.send(data);
+
+
   }
 }
