@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { AfterContentInit, Component, OnInit } from '@angular/core';
 import { Message } from '../model/Message';
 import { WsService } from '../ws.service';
@@ -20,6 +21,7 @@ export class ChatComponent implements OnInit, AfterContentInit {
        messagesc.push(data);
        that.messages=messagesc;
     });
+    this.getmessages();
   }
   name:string="";
   name2:string="";
@@ -53,5 +55,31 @@ export class ChatComponent implements OnInit, AfterContentInit {
   }
   uname(){
     this.name= this.name2;
+  }
+  getmessages(){
+    var xhrr = new XMLHttpRequest();
+    xhrr.withCredentials = true;
+    xhrr.addEventListener("readystatechange", function() {});
+    xhrr.open("GET", "https://proxy-sepiqon.herokuapp.com/getmessages",true);
+    xhrr.withCredentials = false;
+    xhrr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhrr.send();
+    var that=this;
+    xhrr.onreadystatechange=function() {
+      if (xhrr.readyState === 4) {
+        var response = JSON.parse(xhrr.responseText);
+          if (xhrr.status === 200) {
+            console.log('successful');
+            (response as Array<any>).forEach(function (value) {
+                if(value.name !== undefined){
+                  that.messages.push((value as Message));
+                }
+            });
+          } else {
+             console.log('failed');
+          }
+      }
+    }
+
   }
 }
