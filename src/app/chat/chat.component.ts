@@ -29,11 +29,11 @@ export class ChatComponent implements OnInit, AfterContentInit,AfterViewInit {
 
       (async () => {
         console.log('before delay')
-        for (let index = 0; index < 1000; index++) {
-          await new Promise( resolve => setTimeout(resolve, 333) );
-          await new Promise( () => setTimeout(() => { that.myScrollVariable += 1; }, 1) );
+       // for (let index = 0; index < 1000; index++) {
+        //  await new Promise( resolve => setTimeout(resolve, 333) );
+          await new Promise( () => setTimeout(() => { that.myScrollVariable =that.scr.nativeElement.scrollHeight; }, 1) );
 
-        }
+      //  }
 
 
         // Do something after

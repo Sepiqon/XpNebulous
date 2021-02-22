@@ -15,6 +15,6 @@ import { WsService } from './ws.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'NebulousXp';
+  title = 'Nasz czat';
 
 }
