@@ -60,7 +60,9 @@ export class ChatComponent implements OnInit, AfterContentInit, AfterViewInit {
   @ViewChild("scr") scr: any;
   myScrollVariable = 0;
   ngOnInit() {
-
+    if (this.logged()) {
+      this.getme();
+    }
   }
   messages: Array<Message> = new Array();
   value = '';
@@ -68,7 +70,7 @@ export class ChatComponent implements OnInit, AfterContentInit, AfterViewInit {
   send() {
     if (this.value !== '') {
       var model = new Message();
-      if(!this.logged()){
+      if (!this.logged()) {
         model.name = this.name;
       }
       model.message = this.value;
@@ -151,7 +153,7 @@ export class ChatComponent implements OnInit, AfterContentInit, AfterViewInit {
               position: { horizontal: 'center', vertical: 'bottom' },
               type: { style: 'success', icon: true },
               //closable: true
-          });
+            });
           } else {
             that.notificationService.show({
               content: response.message,
@@ -161,7 +163,7 @@ export class ChatComponent implements OnInit, AfterContentInit, AfterViewInit {
               position: { horizontal: 'center', vertical: 'bottom' },
               type: { style: 'error', icon: true },
               //closable: true
-          });
+            });
           }
         }
       }
@@ -171,8 +173,49 @@ export class ChatComponent implements OnInit, AfterContentInit, AfterViewInit {
 
     });
   }
-  logged(){
-   return localStorage.getItem('token');
+  logged() {
+    return localStorage.getItem('token');
+  }
+  getme() {
+    var xhrr = new XMLHttpRequest();
+    xhrr.withCredentials = true;
+    xhrr.addEventListener("readystatechange", function () { });
+    xhrr.open("GET", "https://proxy-sepiqon.herokuapp.com/getme", true);
+    xhrr.withCredentials = false;
+    xhrr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhrr.setRequestHeader("x-access-token", localStorage.getItem('token') as string);
+    xhrr.send();
+    const that = this;
+    xhrr.onreadystatechange = async function () {
+      if (xhrr.readyState === 4) {
+
+        if (xhrr.status === 200) {
+          var response = JSON.parse(xhrr.responseText);
+          that.name = response.name;
+
+        } else {
+          that.notificationService.show({
+            content: xhrr.responseText,
+            hideAfter: 3000,
+            cssClass: 'button-notification',
+            animation: { type: 'fade', duration: 400 },
+            position: { horizontal: 'center', vertical: 'bottom' },
+            type: { style: 'error', icon: true },
+            //closable: true
+          });
+          localStorage.removeItem("token");
+          that.notificationService.show({
+            content: "WYLOGOWANO!!",
+            hideAfter: 3000,
+            cssClass: 'button-notification',
+            animation: { type: 'fade', duration: 400 },
+            position: { horizontal: 'center', vertical: 'bottom' },
+            type: { style: 'info', icon: true },
+            //closable: true
+          });
+        }
+      }
+    }
   }
 
 }
