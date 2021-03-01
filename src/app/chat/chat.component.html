@@ -5,93 +5,145 @@
 
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>Chat</title>
-		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
-		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.js"></script>
-	</head>
-	<!--Coded With Love By Mutiullah Samim-->
-	<body>
-		<div class="container-fluid h-100">
-			<div class="row justify-content-center h-100">
 
-				<div class="col-md-8 col-xl-6 chat">
-					<div class="card">
-						<div class="card-header msg_head">
-							<div class="d-flex bd-highlight">
-								<div class="user_info">
-									<span>Nasz czat</span>
-									<p>1767 wiadomości</p>
-								</div>
-							</div>
+<head>
+  <title>Chat</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+    integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
+    integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <link rel="stylesheet" type="text/css"
+    href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+  <script type="text/javascript"
+    src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.js"></script>
+</head>
+<!--Coded With Love By Mutiullah Samim-->
 
-							<div class="action_menu">
-								<ul>
-									<li><i class="fas fa-user-circle"></i> View profile</li>
-									<li><i class="fas fa-users"></i> Add to close friends</li>
-									<li><i class="fas fa-plus"></i> Add to group</li>
-									<li><i class="fas fa-ban"></i> Block</li>
-								</ul>
-							</div>
-						</div>
-						<div class="card-body msg_card_body" #scr [scrollTop]="myScrollVariable">
-              <div *ngFor="let message of messages">
+<body>
+  <div class="container-fluid h-100">
+    <div class="row justify-content-center h-100">
+
+      <div class="col-md-8 col-xl-6 chat">
+        <div class="card">
+          <div class="card-header msg_head">
+            <div class="d-flex bd-highlight">
+              <div class="user_info">
+                <span>Nasz czat</span>
+                <p>1767 wiadomości</p>
 
 
 
-                <div *ngIf="!(this.name===message.name)" class="d-flex justify-content-start mb-4">
-
-
-                  <div class="img_cont_msg">
-                    <img [src]="'assets/1.png'" class="rounded-circle user_img_msg">
+                <ng-template #content let-modal>
+                  <div class="modal-header">
+                    <h4 class="modal-title" id="modal-basic-title">Zaloguj się</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <form [formGroup]="form">
+                      <div class="form-group">
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <div class="input-group-text"  id="btnGroupAddon">Login</div>
+                          </div>
+                          <input type="text" formControlName="name"   class="form-control">
+                        </div>
+                        <div class="input-group" style="margin-top: 25px;">
+                          <div class="input-group-prepend">
+                            <div class="input-group-text" id="btnGroupAddon">Hasło</div>
+                          </div>
+                          <input type="password" formControlName="password"  class="form-control">
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="submit" [disabled]="!form.valid" class="btn btn-outline-dark" (click)="modal.close(this.form)">Zaloguj</button>
+                      </div>
+                    </form>
                   </div>
 
-                  <div class="msg_cotainer">
-                    <span class="msg_time" style="bottom: auto;top: -13px; font-size: 10px; color: rgba(0, 0, 0, 0.801)">{{message.name}}</span>
-                    {{message.message}}
-                    <span class="msg_time">{{this.date(message.date)}}</span>
-                  </div>
-                </div>
-                <div *ngIf="(this.name===message.name)" class="d-flex justify-content-end mb-4">
-                  <div class="msg_cotainer_send">
-                    {{message.message}}
-                    <span class="msg_time_send" style="color: black">{{this.date(message.date)}}</span>
-                  </div>
-                  <div class="img_cont_msg">
-                <img [src]="'assets/1.png'" class="rounded-circle user_img_msg">
-                  </div>
-                </div>
+                </ng-template>
+
+                <button *ngIf="!logged()" class="btn btn-lg btn-outline-primary" (click)="open(content)">Zaloguj</button>
+
+                <hr>
+
+
 
 
 
               </div>
+            </div>
+
+            <div class="action_menu">
+              <ul>
+                <li><i class="fas fa-user-circle"></i> View profile</li>
+                <li><i class="fas fa-users"></i> Add to close friends</li>
+                <li><i class="fas fa-plus"></i> Add to group</li>
+                <li><i class="fas fa-ban"></i> Block</li>
+              </ul>
+            </div>
+          </div>
+          <div class="card-body msg_card_body" #scr [scrollTop]="myScrollVariable">
+            <div *ngFor="let message of messages">
+
+
+
+              <div *ngIf="!(this.name===message.name)" class="d-flex justify-content-start mb-4">
+
+
+                <div class="img_cont_msg">
+                  <img [src]="'assets/1.png'" class="rounded-circle user_img_msg">
+                </div>
+
+                <div class="msg_cotainer">
+                  <span class="msg_time"
+                    style="bottom: auto;top: -13px; font-size: 10px; color: rgba(0, 0, 0, 0.801)">{{message.name}}</span>
+                  {{message.message}}
+                  <span class="msg_time">{{this.date(message.date)}}</span>
+                </div>
+              </div>
+              <div *ngIf="(this.name===message.name)" class="d-flex justify-content-end mb-4">
+                <div class="msg_cotainer_send">
+                  {{message.message}}
+                  <span class="msg_time_send" style="color: black">{{this.date(message.date)}}</span>
+                </div>
+                <div class="img_cont_msg">
+                  <img [src]="'assets/1.png'" class="rounded-circle user_img_msg">
+                </div>
+              </div>
+
+
+
+            </div>
 
 
 
 
-						</div>
-						<div class="card-footer">
-							<div *ngIf="name!==''" class="input-group">
-								<textarea name="" [(ngModel)]='value' class="form-control type_msg" placeholder="Type your message..."></textarea>
-								<div class="input-group-append">
-									<span (click)="send()" class="input-group-text send_btn"><i class="fas fa-location-arrow"></i></span>
-								</div>
-							</div>
+          </div>
+          <div class="card-footer">
+            <div *ngIf="this.logged() || name!==''" class="input-group">
+              <textarea name="" [(ngModel)]='value' class="form-control type_msg"
+                placeholder="Type your message..."></textarea>
+              <div class="input-group-append">
+                <span (click)="send()" class="input-group-text send_btn"><i class="fas fa-location-arrow"></i></span>
+              </div>
+            </div>
 
 
-              <div *ngIf="name===''" class="input-group">
-								<textarea name="" [(ngModel)]='name2' class="form-control type_msg" placeholder="Wpisz swoją nazwe"></textarea>
-								<div class="input-group-append">
-									<span (click)="uname()" class="input-group-text send_btn"><i class="fas fa-location-arrow"></i></span>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</body>
+            <div *ngIf="name==='' && !logged()" class="input-group">
+              <textarea name="" [(ngModel)]='name2' class="form-control type_msg"
+                placeholder="Wpisz swoją nazwe"></textarea>
+              <div class="input-group-append">
+                <span (click)="uname()" class="input-group-text send_btn"><i class="fas fa-location-arrow"></i></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
 </html>

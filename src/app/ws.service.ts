@@ -24,6 +24,9 @@ export class WsService {
     xhrr.open("POST", "https://proxy-sepiqon.herokuapp.com/ws",true);
     xhrr.withCredentials = false;
     xhrr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    if(localStorage.getItem('token')){
+      xhrr.setRequestHeader("x-access-token", localStorage.getItem('token') as string );
+    }
     xhrr.send(JSON.stringify(ws));
   }
   connect(channnel:string,event:string,callback:Function){

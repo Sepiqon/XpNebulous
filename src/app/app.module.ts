@@ -13,9 +13,12 @@ import { HttpClientModule } from '@angular/common/http';
 import { ChatComponent } from './chat/chat.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { NebulousxpComponent } from './nebulousxp/nebulousxp.component';
+import {ReactiveFormsModule} from "@angular/forms";
+import { NotificationModule } from '@progress/kendo-angular-notification';
+
 
 @NgModule({
-  declarations: [	
+  declarations: [
     AppComponent,
       NumericInputComponent,
       ChatComponent,
@@ -29,7 +32,9 @@ import { NebulousxpComponent } from './nebulousxp/nebulousxp.component';
     MatButtonToggleModule,
     FormsModule,
     HttpClientModule,
-    NgbModule
+    NgbModule,
+    ReactiveFormsModule,
+    NotificationModule
   ],
   providers: [],
   bootstrap: [AppComponent]
