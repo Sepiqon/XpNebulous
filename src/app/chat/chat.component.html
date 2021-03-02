@@ -24,8 +24,23 @@
   <div class="container-fluid h-100">
     <div class="row justify-content-center h-100">
 
+
+
+
+
+
+
       <div class="col-md-8 col-xl-6 chat">
+
         <div class="card">
+          <div class="btn-group" role="group" aria-label="Basic example">
+            <button *ngIf="!logged()" class="btn btn-lg btn-outline-primary" (click)="openLogin(loginform)">Zaloguj</button>
+
+
+          <button *ngIf="!logged()" class="btn btn-lg btn-outline-primary" (click)="openRegister(registerform)">Zarejestruj</button>
+          </div>
+
+          <button *ngIf="logged()" class="btn btn-lg btn-outline-primary" (click)="loginout()">Wyloguj</button>
           <div class="card-header msg_head">
             <div class="d-flex bd-highlight">
               <div class="user_info">
@@ -34,40 +49,9 @@
 
 
 
-                <ng-template #content let-modal>
-                  <div class="modal-header">
-                    <h4 class="modal-title" id="modal-basic-title">Zaloguj się</h4>
-                    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>
-                  <div class="modal-body">
-                    <form [formGroup]="form">
-                      <div class="form-group">
-                        <div class="input-group">
-                          <div class="input-group-prepend">
-                            <div class="input-group-text"  id="btnGroupAddon">Login</div>
-                          </div>
-                          <input type="text" formControlName="name"   class="form-control">
-                        </div>
-                        <div class="input-group" style="margin-top: 25px;">
-                          <div class="input-group-prepend">
-                            <div class="input-group-text" id="btnGroupAddon">Hasło</div>
-                          </div>
-                          <input type="password" formControlName="password"  class="form-control">
-                        </div>
-                      </div>
-                      <div class="modal-footer">
-                        <button type="submit" [disabled]="!form.valid" class="btn btn-outline-dark" (click)="modal.close(this.form)">Zaloguj</button>
-                      </div>
-                    </form>
-                  </div>
 
-                </ng-template>
 
-                <button *ngIf="!logged()" class="btn btn-lg btn-outline-primary" (click)="open(content)">Zaloguj</button>
 
-                <hr>
 
 
 
@@ -147,3 +131,85 @@
 </body>
 
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+<ng-template #loginform let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Zaloguj się</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="login">
+      <div class="form-group">
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <div class="input-group-text"  id="btnGroupAddon">Login</div>
+          </div>
+          <input type="text" formControlName="name"   class="form-control">
+        </div>
+        <div class="input-group" style="margin-top: 25px;">
+          <div class="input-group-prepend">
+            <div class="input-group-text" id="btnGroupAddon">Hasło</div>
+          </div>
+          <input type="password" formControlName="password"  class="form-control">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" [disabled]="!login.valid" class="btn btn-outline-dark" (click)="modal.close(this.login)">Zaloguj</button>
+      </div>
+    </form>
+  </div>
+
+</ng-template>
+
+
+
+<ng-template #registerform let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Zarejestruj się</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="register">
+      <div class="form-group">
+        <div class="input-group" >
+          <div class="input-group-prepend">
+            <div class="input-group-text"  id="btnGroupAddon">Email</div>
+          </div>
+          <input type="text" formControlName="email"   class="form-control">
+        </div>
+        <div class="input-group" style="margin-top: 25px;">
+          <div class="input-group-prepend">
+            <div class="input-group-text"  id="btnGroupAddon">Login</div>
+          </div>
+          <input type="text" formControlName="name"   class="form-control">
+        </div>
+
+        <div class="input-group" style="margin-top: 25px;">
+          <div class="input-group-prepend">
+            <div class="input-group-text" id="btnGroupAddon">Hasło</div>
+          </div>
+          <input type="password" formControlName="password"  class="form-control">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" [disabled]="!register.valid" class="btn btn-outline-dark" (click)="modal.close(this.register)">Zarejestruj</button>
+      </div>
+    </form>
+  </div>
+
+</ng-template>

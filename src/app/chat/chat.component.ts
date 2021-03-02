@@ -17,9 +17,14 @@ export class ChatComponent implements OnInit, AfterContentInit, AfterViewInit {
   constructor(private ws: WsService, private modalService: NgbModal, private notificationService: NotificationService) { }
   name = '';
   name2 = '';
-  form = new FormGroup({
+  login = new FormGroup({
     "name": new FormControl("", Validators.required),
     "password": new FormControl("", Validators.required),
+  });
+  register = new FormGroup({
+    "name": new FormControl("", Validators.required),
+    "password": new FormControl("", Validators.required),
+    "email": new FormControl("", [Validators.email, Validators.required]),
   });
   ngAfterViewInit(): void {
     var that = this;
@@ -127,7 +132,7 @@ export class ChatComponent implements OnInit, AfterContentInit, AfterViewInit {
 
 
   }
-  open(content: any) {
+  openLogin(content: any) {
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
 
       var xhrr = new XMLHttpRequest();
@@ -143,7 +148,6 @@ export class ChatComponent implements OnInit, AfterContentInit, AfterViewInit {
           var response = JSON.parse(xhrr.responseText);
           if (xhrr.status === 200) {
             console.log('successful');
-            console.log(response);
             localStorage.setItem('token', response.token);
             that.notificationService.show({
               content: 'Zalogowano się',
@@ -154,6 +158,7 @@ export class ChatComponent implements OnInit, AfterContentInit, AfterViewInit {
               type: { style: 'success', icon: true },
               //closable: true
             });
+            that.getme();
           } else {
             that.notificationService.show({
               content: response.message,
@@ -173,8 +178,58 @@ export class ChatComponent implements OnInit, AfterContentInit, AfterViewInit {
 
     });
   }
+  openRegister(content: any) {
+    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
+
+      var xhrr = new XMLHttpRequest();
+      xhrr.withCredentials = true;
+      xhrr.addEventListener("readystatechange", function () { });
+      xhrr.open("POST", "https://proxy-sepiqon.herokuapp.com/register", true);
+      xhrr.withCredentials = false;
+      xhrr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+      xhrr.send(JSON.stringify(result.value));
+      const that = this;
+      xhrr.onreadystatechange = async function () {
+        if (xhrr.readyState === 4) {
+
+          if (xhrr.status === 200) {
+            var response = JSON.parse(xhrr.responseText);
+            localStorage.setItem('token', response.token);
+            that.notificationService.show({
+              content: 'Zarejestrowano się i automatycznie zalogowano',
+              hideAfter: 3000,
+              cssClass: 'button-notification',
+              animation: { type: 'fade', duration: 400 },
+              position: { horizontal: 'center', vertical: 'bottom' },
+              type: { style: 'success', icon: true },
+              //closable: true
+            });
+            //  that.getme();
+          } else {
+            that.notificationService.show({
+              content: JSON.parse(xhrr.responseText).message,
+              hideAfter: 3000,
+              cssClass: 'button-notification',
+              animation: { type: 'fade', duration: 400 },
+              position: { horizontal: 'center', vertical: 'bottom' },
+              type: { style: 'error', icon: true },
+              //closable: true
+            });
+          }
+        }
+      }
+
+
+    }, (reason) => {
+
+    });
+  }
   logged() {
-    return localStorage.getItem('token');
+    if(!localStorage.getItem('token')){
+      return false;
+    } else {
+      return true;
+    }
   }
   getme() {
     var xhrr = new XMLHttpRequest();
@@ -203,19 +258,22 @@ export class ChatComponent implements OnInit, AfterContentInit, AfterViewInit {
             type: { style: 'error', icon: true },
             //closable: true
           });
-          localStorage.removeItem("token");
-          that.notificationService.show({
-            content: "WYLOGOWANO!!",
-            hideAfter: 3000,
-            cssClass: 'button-notification',
-            animation: { type: 'fade', duration: 400 },
-            position: { horizontal: 'center', vertical: 'bottom' },
-            type: { style: 'info', icon: true },
-            //closable: true
-          });
+          that.loginout();
         }
       }
     }
   }
 
+  loginout() {
+    localStorage.removeItem("token");
+    this.notificationService.show({
+      content: "WYLOGOWANO!!",
+      hideAfter: 3000,
+      cssClass: 'button-notification',
+      animation: { type: 'fade', duration: 400 },
+      position: { horizontal: 'center', vertical: 'bottom' },
+      type: { style: 'info', icon: true },
+      //closable: true
+    });
+  }
 }
