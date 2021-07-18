@@ -77,16 +77,24 @@
               <div *ngIf="!(this.name===message.name)" class="d-flex justify-content-start mb-4">
 
 
-                <div class="img_cont_msg">
-                  <img [src]="'assets/1.png'" class="rounded-circle user_img_msg">
+                <div  class="img_cont_msg">
+                  <img [src]="'assets/1.png'"  class="rounded-circle user_img_msg">
                 </div>
 
-                <div class="msg_cotainer">
+                <div *ngIf="message.auth" class="msg_cotainer" style="background-color:greenyellow;" >
                   <span class="msg_time"
                     style="bottom: auto;top: -13px; font-size: 10px; color: rgba(0, 0, 0, 0.801)">{{message.name}}</span>
                   {{message.message}}
                   <span class="msg_time">{{this.date(message.date)}}</span>
                 </div>
+
+                <div *ngIf="!message.auth" class="msg_cotainer" >
+                  <span class="msg_time"
+                    style="bottom: auto;top: -13px; font-size: 10px; color: rgba(0, 0, 0, 0.801)">{{message.name}}</span>
+                  {{message.message}}
+                  <span class="msg_time">{{this.date(message.date)}}</span>
+                </div>
+
               </div>
               <div *ngIf="(this.name===message.name)" class="d-flex justify-content-end mb-4">
                 <div class="msg_cotainer_send">

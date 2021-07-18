@@ -132,22 +132,45 @@ export class ChatComponent implements OnInit, AfterContentInit, AfterViewInit {
 
 
   }
+  createXHR(method: string, url: string, data: any, fun: (this: XMLHttpRequest, ev: Event) => any, methodFun: string | undefined, refreshToken: string | undefined) {
+
+    var xhr = new XMLHttpRequest();
+    xhr.withCredentials = true;
+    xhr.addEventListener("readystatechange", function () { });
+    xhr.open(method, "http://localhost:8088/" + url, true);
+    //xhr.withCredentials = false;
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    if (methodFun) {
+      xhr.setRequestHeader("fun", methodFun);
+    }
+    if (sessionStorage.getItem("sessionToken")) {
+      xhr.setRequestHeader("csrf-token", sessionStorage.getItem("sessionToken") as string);
+    }
+    if (refreshToken) {
+      xhr.send(JSON.stringify({ refreshToken: refreshToken }));
+    } else {
+      if (data) {
+        xhr.send(JSON.stringify(data));
+      } else {
+        xhr.send();
+      }
+    }
+
+    xhr.onreadystatechange = fun;
+  }
   openLogin(content: any) {
+    var that = this;
+    if (!sessionStorage.getItem("sessionToken")) {
+      this.getCSFRtoken();
+    }
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
 
-      var xhrr = new XMLHttpRequest();
-      xhrr.withCredentials = true;
-      xhrr.addEventListener("readystatechange", function () { });
-      xhrr.open("POST", "https://proxy-sepiqon.herokuapp.com/login", true);
-      xhrr.withCredentials = false;
-      xhrr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-      xhrr.send(JSON.stringify(result.value));
-      const that = this;
-      xhrr.onreadystatechange = async function () {
-        if (xhrr.readyState === 4) {
-          var response = JSON.parse(xhrr.responseText);
-          if (xhrr.status === 200) {
-            console.log('successful');
+
+      this.createXHR("POST", "login", result.value, async (req: any) => {
+        if ((req.target as XMLHttpRequest).readyState === 4) {
+          var response = JSON.parse((req.target as XMLHttpRequest).responseText);
+          if ((req.target as XMLHttpRequest).status === 200) {
+
             localStorage.setItem('token', response.token);
             that.notificationService.show({
               content: 'Zalogowano się',
@@ -158,10 +181,10 @@ export class ChatComponent implements OnInit, AfterContentInit, AfterViewInit {
               type: { style: 'success', icon: true },
               //closable: true
             });
-            that.getme();
+            this.getme();
           } else {
-            that.notificationService.show({
-              content: response.message,
+            this.notificationService.show({
+              content: (req.target as XMLHttpRequest).statusText,
               hideAfter: 3000,
               cssClass: 'button-notification',
               animation: { type: 'fade', duration: 400 },
@@ -171,12 +194,51 @@ export class ChatComponent implements OnInit, AfterContentInit, AfterViewInit {
             });
           }
         }
-      }
+
+      }, undefined, undefined);
 
 
     }, (reason) => {
 
     });
+  }
+  getCSFRtoken() {
+    this.createXHR("GET", "csfr", undefined, async (req: any) => {
+      var res = (req.target as XMLHttpRequest);
+      if (res.readyState == 4) {
+        var body = JSON.parse(res.responseText);
+        if (res.status === 200) {
+          this.show(body.message, false);
+          sessionStorage.setItem("sessionToken", res.getResponseHeader("csrf-token") as string)
+        } else {
+          this.show(body.message, true);
+
+        }
+      }
+      //Access-Control-Expose-Headers: *
+
+    }, undefined, undefined);
+  }
+  show(s: string, err: boolean) {
+    if (err) {
+      this.notificationService.show({
+        content: s,
+        hideAfter: 3000,
+        cssClass: 'button-notification',
+        animation: { type: 'fade', duration: 400 },
+        position: { horizontal: 'center', vertical: 'bottom' },
+        type: { style: 'error', icon: true }
+      });
+    } else {
+      this.notificationService.show({
+        content: s,
+        hideAfter: 3000,
+        cssClass: 'button-notification',
+        animation: { type: 'fade', duration: 400 },
+        position: { horizontal: 'center', vertical: 'bottom' },
+        type: { style: 'success', icon: true }
+      });
+    }
   }
   openRegister(content: any) {
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
@@ -187,6 +249,7 @@ export class ChatComponent implements OnInit, AfterContentInit, AfterViewInit {
       xhrr.open("POST", "https://proxy-sepiqon.herokuapp.com/register", true);
       xhrr.withCredentials = false;
       xhrr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+      result.value.name = result.value.name.trim();
       xhrr.send(JSON.stringify(result.value));
       const that = this;
       xhrr.onreadystatechange = async function () {
@@ -204,7 +267,7 @@ export class ChatComponent implements OnInit, AfterContentInit, AfterViewInit {
               type: { style: 'success', icon: true },
               //closable: true
             });
-            //  that.getme();
+            that.getme();
           } else {
             that.notificationService.show({
               content: JSON.parse(xhrr.responseText).message,
@@ -225,7 +288,7 @@ export class ChatComponent implements OnInit, AfterContentInit, AfterViewInit {
     });
   }
   logged() {
-    if(!localStorage.getItem('token')){
+    if (!localStorage.getItem('token')) {
       return false;
     } else {
       return true;
@@ -266,6 +329,8 @@ export class ChatComponent implements OnInit, AfterContentInit, AfterViewInit {
 
   loginout() {
     localStorage.removeItem("token");
+    this.name = '';
+    this.name2 = '';
     this.notificationService.show({
       content: "WYLOGOWANO!!",
       hideAfter: 3000,
@@ -273,7 +338,7 @@ export class ChatComponent implements OnInit, AfterContentInit, AfterViewInit {
       animation: { type: 'fade', duration: 400 },
       position: { horizontal: 'center', vertical: 'bottom' },
       type: { style: 'info', icon: true },
-      //closable: true
+
     });
   }
 }
