@@ -71,11 +71,14 @@ export class ChatComponent implements OnInit, AfterContentInit, AfterViewInit {
     }
     if (this.logged()) {
       this.getme();
+      this.re();
     }
   }
   messages: Array<Message> = new Array();
   value = '';
   closeResult = '';
+  toLoginout = false;
+  togetme = false;
   send() {
     if (this.value !== '') {
       var model = new Message();
@@ -131,7 +134,7 @@ export class ChatComponent implements OnInit, AfterContentInit, AfterViewInit {
     var xhr = new XMLHttpRequest();
     xhr.withCredentials = true;
     xhr.addEventListener("readystatechange", function () { });
-    xhr.open(method, "http://localhost:8088/" + url, true);
+    xhr.open(method, "https://proxy-sepiqon.herokuapp.com/" + url, true);
     //xhr.withCredentials = false;
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     if (methodFun) {
@@ -165,6 +168,7 @@ export class ChatComponent implements OnInit, AfterContentInit, AfterViewInit {
           var response = JSON.parse((req.target as XMLHttpRequest).responseText);
           if ((req.target as XMLHttpRequest).status === 200) {
             localStorage.setItem("refreshToken", response.refreshToken);
+            this.re();
             this.getme();
             that.show("Zalogowano się", false);
           } else {
@@ -186,7 +190,11 @@ export class ChatComponent implements OnInit, AfterContentInit, AfterViewInit {
         var body = JSON.parse(res.responseText);
         if (res.status === 200) {
           this.show(body.message, false);
-          sessionStorage.setItem("sessionToken", res.getResponseHeader("csrf-token") as string)
+          sessionStorage.setItem("sessionToken", res.getResponseHeader("csrf-token") as string);
+          if (this.toLoginout) {
+            this.loginout();
+            this.toLoginout = false;
+          }
         } else {
           this.show(body.message, true);
 
@@ -227,6 +235,7 @@ export class ChatComponent implements OnInit, AfterContentInit, AfterViewInit {
           if ((req.target as XMLHttpRequest).status === 200) {
             localStorage.setItem("refreshToken", response.refreshToken);
             this.getme();
+            this.re();
             that.show("Zarejestrowano się", false);
           } else {
             that.show(JSON.parse((req.target as XMLHttpRequest).responseText).message, true);
@@ -253,13 +262,17 @@ export class ChatComponent implements OnInit, AfterContentInit, AfterViewInit {
         if ((req.target as XMLHttpRequest).status === 200) {
           that.auth = response;
           that.name = response.name;
+
         } else {
 
           if ((req.target as XMLHttpRequest).statusText == "TokenExpired") {
+            this.togetme = true;
             this.refreshToken();
-            setTimeout(() => {
-              this.refreshToken();
-            }, 1000 * 60 * 8);
+
+            this.re();
+          } else if ((req.target as XMLHttpRequest).statusText.replace("CS", "") != (req.target as XMLHttpRequest).statusText) {
+            this.getCSFRtoken();
+            this.toLoginout = true;
           } else {
             that.show(response.message, true);
           }
@@ -268,6 +281,15 @@ export class ChatComponent implements OnInit, AfterContentInit, AfterViewInit {
       }
 
     }, undefined, false);
+  }
+  re() {
+
+    setTimeout(() => {
+      let v = this.re()
+      this.refreshToken();
+      this.getme();
+    }, 1000 * 60 * 8)
+    return "async function return";
   }
 
   loginout() {
@@ -282,6 +304,10 @@ export class ChatComponent implements OnInit, AfterContentInit, AfterViewInit {
           this.name = '';
           this.name2 = '';
         } else {
+          if ((req.target as XMLHttpRequest).statusText == "TokenExpired") {
+            that.refreshToken();
+            that.toLoginout = true;
+          }
           that.show(response.message, true);
         }
       }
@@ -295,9 +321,18 @@ export class ChatComponent implements OnInit, AfterContentInit, AfterViewInit {
         var response = JSON.parse((req.target as XMLHttpRequest).responseText);
         if ((req.target as XMLHttpRequest).status === 200) {
           localStorage.setItem("refreshToken", response.refreshToken);
+          if (that.toLoginout) {
+            this.loginout();
+            this.toLoginout = false;
+          }
+          if (that.togetme) {
+            this.getme();
+            this.togetme = false;
+          }
           that.show(response.message, false);
-          this.getme();
         } else {
+          this.show("WYLOGOWANO!!!", true);
+          localStorage.removeItem("refreshToken");
           that.show(response.message, true);
         }
       }
