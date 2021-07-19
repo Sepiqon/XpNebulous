@@ -26,6 +26,7 @@ export class ChatComponent implements OnInit, AfterContentInit, AfterViewInit {
     "password": new FormControl("", Validators.required),
     "email": new FormControl("", [Validators.email, Validators.required]),
   });
+  auth: any = {};
   ngAfterViewInit(): void {
     var that = this;
     this.ws.connect("wiadomosci", "send", async function (data: any) {
@@ -65,6 +66,9 @@ export class ChatComponent implements OnInit, AfterContentInit, AfterViewInit {
   @ViewChild("scr") scr: any;
   myScrollVariable = 0;
   ngOnInit() {
+    if (!sessionStorage.getItem("sessionToken")) {
+      this.getCSFRtoken();
+    }
     if (this.logged()) {
       this.getme();
     }
@@ -77,9 +81,12 @@ export class ChatComponent implements OnInit, AfterContentInit, AfterViewInit {
       var model = new Message();
       if (!this.logged()) {
         model.name = this.name;
+      } else {
+        model.auth = this.auth;
+        model.name = this.auth.name;
       }
       model.message = this.value;
-      this.ws.send(model, "send", "wiadomosci");
+      this.ws.send(model, "send", "wiadomosci", this);
     }
     this.value = '';
 
@@ -101,38 +108,25 @@ export class ChatComponent implements OnInit, AfterContentInit, AfterViewInit {
     this.name = this.name2;
   }
   getmessages() {
-    var xhrr = new XMLHttpRequest();
-    xhrr.withCredentials = true;
-    xhrr.addEventListener("readystatechange", function () { });
-    xhrr.open("GET", "https://proxy-sepiqon.herokuapp.com/getmessages", true);
-    xhrr.withCredentials = false;
-    xhrr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    xhrr.send();
-    const that = this;
-    xhrr.onreadystatechange = async function () {
-      if (xhrr.readyState === 4) {
-        var response = JSON.parse(xhrr.responseText);
-        if (xhrr.status === 200) {
-          console.log('successful');
-          (response as Array<any>).forEach(function (value) {
-            if (value.name !== undefined) {
-
-              that.messages.push((value as Message));
-              setTimeout(() => { that.myScrollVariable = that.scr.nativeElement.scrollHeight; }, 1)
-              //const s = document.getElementById('scr');
-              // (s as HTMLElement).scrollTop=(s as HTMLElement).scrollHeight;
-
-            }
+    var that = this;
+    this.createXHR("GET", "getmessages", undefined, async (req: any) => {
+      if ((req.target as XMLHttpRequest).readyState === 4) {
+        var response = JSON.parse((req.target as XMLHttpRequest).responseText);
+        if ((req.target as XMLHttpRequest).status === 200) {
+          (response as Message[]).forEach((v) => {
+            that.messages.push(v);
+            setTimeout(() => { that.myScrollVariable = that.scr.nativeElement.scrollHeight; }, 1);
           });
         } else {
-          console.log('failed');
+          that.show(response.message, true);
         }
       }
-    }
+
+    }, undefined, false);
 
 
   }
-  createXHR(method: string, url: string, data: any, fun: (this: XMLHttpRequest, ev: Event) => any, methodFun: string | undefined, refreshToken: string | undefined) {
+  createXHR(method: string, url: string, data: any, fun: (this: XMLHttpRequest, ev: Event) => any, methodFun: string | undefined, refreshToken: boolean) {
 
     var xhr = new XMLHttpRequest();
     xhr.withCredentials = true;
@@ -145,6 +139,9 @@ export class ChatComponent implements OnInit, AfterContentInit, AfterViewInit {
     }
     if (sessionStorage.getItem("sessionToken")) {
       xhr.setRequestHeader("csrf-token", sessionStorage.getItem("sessionToken") as string);
+    }
+    if (refreshToken == true) {
+      xhr.setRequestHeader("refreshToken", localStorage.getItem("refreshToken") as string);
     }
     if (refreshToken) {
       xhr.send(JSON.stringify({ refreshToken: refreshToken }));
@@ -160,9 +157,6 @@ export class ChatComponent implements OnInit, AfterContentInit, AfterViewInit {
   }
   openLogin(content: any) {
     var that = this;
-    if (!sessionStorage.getItem("sessionToken")) {
-      this.getCSFRtoken();
-    }
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
 
 
@@ -170,32 +164,15 @@ export class ChatComponent implements OnInit, AfterContentInit, AfterViewInit {
         if ((req.target as XMLHttpRequest).readyState === 4) {
           var response = JSON.parse((req.target as XMLHttpRequest).responseText);
           if ((req.target as XMLHttpRequest).status === 200) {
-
-            localStorage.setItem('token', response.token);
-            that.notificationService.show({
-              content: 'Zalogowano się',
-              hideAfter: 3000,
-              cssClass: 'button-notification',
-              animation: { type: 'fade', duration: 400 },
-              position: { horizontal: 'center', vertical: 'bottom' },
-              type: { style: 'success', icon: true },
-              //closable: true
-            });
+            localStorage.setItem("refreshToken", response.refreshToken);
             this.getme();
+            that.show("Zalogowano się", false);
           } else {
-            this.notificationService.show({
-              content: (req.target as XMLHttpRequest).statusText,
-              hideAfter: 3000,
-              cssClass: 'button-notification',
-              animation: { type: 'fade', duration: 400 },
-              position: { horizontal: 'center', vertical: 'bottom' },
-              type: { style: 'error', icon: true },
-              //closable: true
-            });
+            that.show(JSON.parse((req.target as XMLHttpRequest).responseText).message, true);
           }
         }
 
-      }, undefined, undefined);
+      }, undefined, false);
 
 
     }, (reason) => {
@@ -217,7 +194,7 @@ export class ChatComponent implements OnInit, AfterContentInit, AfterViewInit {
       }
       //Access-Control-Expose-Headers: *
 
-    }, undefined, undefined);
+    }, undefined, false);
   }
   show(s: string, err: boolean) {
     if (err) {
@@ -241,104 +218,90 @@ export class ChatComponent implements OnInit, AfterContentInit, AfterViewInit {
     }
   }
   openRegister(content: any) {
+    var that = this;
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
 
-      var xhrr = new XMLHttpRequest();
-      xhrr.withCredentials = true;
-      xhrr.addEventListener("readystatechange", function () { });
-      xhrr.open("POST", "https://proxy-sepiqon.herokuapp.com/register", true);
-      xhrr.withCredentials = false;
-      xhrr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-      result.value.name = result.value.name.trim();
-      xhrr.send(JSON.stringify(result.value));
-      const that = this;
-      xhrr.onreadystatechange = async function () {
-        if (xhrr.readyState === 4) {
-
-          if (xhrr.status === 200) {
-            var response = JSON.parse(xhrr.responseText);
-            localStorage.setItem('token', response.token);
-            that.notificationService.show({
-              content: 'Zarejestrowano się i automatycznie zalogowano',
-              hideAfter: 3000,
-              cssClass: 'button-notification',
-              animation: { type: 'fade', duration: 400 },
-              position: { horizontal: 'center', vertical: 'bottom' },
-              type: { style: 'success', icon: true },
-              //closable: true
-            });
-            that.getme();
+      this.createXHR("POST", "register", result.value, async (req: any) => {
+        if ((req.target as XMLHttpRequest).readyState === 4) {
+          var response = JSON.parse((req.target as XMLHttpRequest).responseText);
+          if ((req.target as XMLHttpRequest).status === 200) {
+            localStorage.setItem("refreshToken", response.refreshToken);
+            this.getme();
+            that.show("Zarejestrowano się", false);
           } else {
-            that.notificationService.show({
-              content: JSON.parse(xhrr.responseText).message,
-              hideAfter: 3000,
-              cssClass: 'button-notification',
-              animation: { type: 'fade', duration: 400 },
-              position: { horizontal: 'center', vertical: 'bottom' },
-              type: { style: 'error', icon: true },
-              //closable: true
-            });
+            that.show(JSON.parse((req.target as XMLHttpRequest).responseText).message, true);
           }
         }
-      }
 
+      }, undefined, false);
 
     }, (reason) => {
 
     });
   }
   logged() {
-    if (!localStorage.getItem('token')) {
-      return false;
-    } else {
+    if (localStorage.getItem("refreshToken")) {
       return true;
     }
+    return false;
   }
   getme() {
-    var xhrr = new XMLHttpRequest();
-    xhrr.withCredentials = true;
-    xhrr.addEventListener("readystatechange", function () { });
-    xhrr.open("GET", "https://proxy-sepiqon.herokuapp.com/getme", true);
-    xhrr.withCredentials = false;
-    xhrr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    xhrr.setRequestHeader("x-access-token", localStorage.getItem('token') as string);
-    xhrr.send();
-    const that = this;
-    xhrr.onreadystatechange = async function () {
-      if (xhrr.readyState === 4) {
-
-        if (xhrr.status === 200) {
-          var response = JSON.parse(xhrr.responseText);
+    var that = this;
+    this.createXHR("GET", "getme", undefined, async (req: any) => {
+      if ((req.target as XMLHttpRequest).readyState === 4) {
+        var response = JSON.parse((req.target as XMLHttpRequest).responseText);
+        if ((req.target as XMLHttpRequest).status === 200) {
+          that.auth = response;
           that.name = response.name;
-
         } else {
-          that.notificationService.show({
-            content: xhrr.responseText,
-            hideAfter: 3000,
-            cssClass: 'button-notification',
-            animation: { type: 'fade', duration: 400 },
-            position: { horizontal: 'center', vertical: 'bottom' },
-            type: { style: 'error', icon: true },
-            //closable: true
-          });
-          that.loginout();
+
+          if ((req.target as XMLHttpRequest).statusText == "TokenExpired") {
+            this.refreshToken();
+            setTimeout(() => {
+              this.refreshToken();
+            }, 1000 * 60 * 8);
+          } else {
+            that.show(response.message, true);
+          }
+
         }
       }
-    }
+
+    }, undefined, false);
   }
 
   loginout() {
-    localStorage.removeItem("token");
-    this.name = '';
-    this.name2 = '';
-    this.notificationService.show({
-      content: "WYLOGOWANO!!",
-      hideAfter: 3000,
-      cssClass: 'button-notification',
-      animation: { type: 'fade', duration: 400 },
-      position: { horizontal: 'center', vertical: 'bottom' },
-      type: { style: 'info', icon: true },
 
-    });
+    var that = this;
+    this.createXHR("GET", "loginout", undefined, async (req: any) => {
+      if ((req.target as XMLHttpRequest).readyState === 4) {
+        var response = JSON.parse((req.target as XMLHttpRequest).responseText);
+        if ((req.target as XMLHttpRequest).status === 200) {
+          that.show(response.message, false);
+          localStorage.removeItem("refreshToken");
+          this.name = '';
+          this.name2 = '';
+        } else {
+          that.show(response.message, true);
+        }
+      }
+
+    }, undefined, true);
+  }
+  refreshToken() {
+    var that = this;
+    this.createXHR("GET", "refresh", undefined, async (req: any) => {
+      if ((req.target as XMLHttpRequest).readyState === 4) {
+        var response = JSON.parse((req.target as XMLHttpRequest).responseText);
+        if ((req.target as XMLHttpRequest).status === 200) {
+          localStorage.setItem("refreshToken", response.refreshToken);
+          that.show(response.message, false);
+          this.getme();
+        } else {
+          that.show(response.message, true);
+        }
+      }
+
+    }, undefined, true);
   }
 }
