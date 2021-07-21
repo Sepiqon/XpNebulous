@@ -209,6 +209,9 @@ export class ChatComponent implements OnInit, AfterContentInit, AfterViewInit {
       that.auth = res.data;
       that.name = res.data.name;
     }, (res: ResponseReq) => {
+      localStorage.removeItem("refreshToken");
+      this.name = '';
+      this.name2 = '';
     });
   }
 
@@ -255,12 +258,20 @@ export class ChatComponent implements OnInit, AfterContentInit, AfterViewInit {
           data.message ? that.show(data.message, true) : that.show("ERROR!!!", true);
           switch (xhr.statusText) {
             case "TokenExpired":
-              that.refreshToken().then(x => {
-                resolve(that.createXHR_1_2(method, url, data, methodFun, refreshToken, sukcessCallBack, errorCallBack));
+              that.getCSFRtoken().then(z => {
+                that.refreshToken().then(x => {
+                  resolve(that.createXHR_1_2(method, url, data, methodFun, refreshToken, sukcessCallBack, errorCallBack));
 
+                })
               });
+
               break;
             default:
+              if (xhr.statusText.replace("CS", "") != xhr.statusText) {
+                that.getCSFRtoken().then(z => {
+                  resolve(that.createXHR_1_2(method, url, data, methodFun, refreshToken, sukcessCallBack, errorCallBack));
+                });
+              }
               errorCallBack(new ResponseReq(data, xhr));
               resolve(new ResponseReq(data, xhr));
               break;
