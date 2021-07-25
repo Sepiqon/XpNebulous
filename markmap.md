@@ -28,6 +28,14 @@
 
 <!--endregion csrf-->
 
+### Action Authorization (getme)
+
+<!--region getme-->
+
+<img src="https://lh4.googleusercontent.com/z7T_BFR_OaaM2eu_ykKYEXqjFqNxGncqZCVRD97CEjjnFcxbc7GB4SYqgISB-70TFt4ZUl_NV8qpgw=w1360-h657">
+
+<!--endregion getme-->
+
 # STRONA
 
 ## Akcje
