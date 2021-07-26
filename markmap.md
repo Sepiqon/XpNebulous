@@ -91,11 +91,14 @@ Errors:
 
 Errors:
 
-| PL  | ENG | Unsafe (automatic logout) | Location |
-| :-: | :-: | :-----------------------: | :------: |
-|     |     |                           |          |
-
-0 ERRORS
+|                PL                |         ENG         | Unsafe (automatic logout) |   Location    |
+| :------------------------------: | :-----------------: | :-----------------------: | :-----------: |
+|   Nieprawidłowy refresh token    | InvalidRefreshToken |            Yes            |     csrf      |
+|        Brak refresh token        |  LackRefreshToken   |            Yes            |     csrf      |
+|           Błędny token           |    TokenInvalid     |            Yes            | Authorization |
+|        Zostałeś usunięty         | UserHasBeenDeleted  |            Yes            | Authorization |
+| Twoja rola jest niewystarczająca |    RoleIsTooLow     |            No             | Authorization |
+|           Brak tokenu            |      TokenLack      |            No             | Authorization |
 
 <br>
 <br>
@@ -111,20 +114,19 @@ Errors:
 
 Errors:
 
-|                        PL                        |         ENG          | Unsafe (automatic logout) |   Location    |
-| :----------------------------------------------: | :------------------: | :-----------------------: | :-----------: |
-|            Brak identyfikatora sesji             |    LackSessionId     |            No             |     csrf      |
-|              Twój CSRF token wygasł              |   CSRFTokenExpired   |            No             |     csrf      |
-|                Błędny CSRF token                 |   CSRFTokenInvalid   |            Yes            |     csrf      |
-|            Brak CSFR token w database            |   LackCSFRTokenDB    |            Yes            |     csrf      |
-| Niezgodność z csrf-token z identyfikatorem sesji | IncompatibilityCSRF  |            Yes            |     csrf      |
-|                 Brak CSFR token                  |    LackCSFRToken     |            No             |     csrf      |
-|                Twój token wygasł                 |     TokenExpired     |            No             | Authorization |
-|                   Błędny token                   |     TokenInvalid     |            Yes            | Authorization |
-|        CSRF token nieprawidłowy do sesji         | CSRFInvalidToSession |            Yes            | Authorization |
-|                Zostałeś usunięty                 |  UserHasBeenDeleted  |            Yes            | Authorization |
-|         Twoja rola jest niewystarczająca         |     RoleIsTooLow     |            No             | Authorization |
-|                   Brak tokenu                    |      TokenLack       |            No             | Authorization |
+|                        PL                        |         ENG         | Unsafe (automatic logout) |   Location    |
+| :----------------------------------------------: | :-----------------: | :-----------------------: | :-----------: |
+|            Brak identyfikatora sesji             |    LackSessionId    |            No             |     csrf      |
+|              Twój CSRF token wygasł              |  CSRFTokenExpired   |            No             |     csrf      |
+|                Błędny CSRF token                 |  CSRFTokenInvalid   |            Yes            |     csrf      |
+|            Brak CSFR token w database            |   LackCSFRTokenDB   |            Yes            |     csrf      |
+| Niezgodność z csrf-token z identyfikatorem sesji | IncompatibilityCSRF |            Yes            |     csrf      |
+|                 Brak CSFR token                  |    LackCSFRToken    |            No             |     csrf      |
+|                Twój token wygasł                 |    TokenExpired     |            No             | Authorization |
+|                   Błędny token                   |    TokenInvalid     |            Yes            | Authorization |
+|                Zostałeś usunięty                 | UserHasBeenDeleted  |            Yes            | Authorization |
+|         Twoja rola jest niewystarczająca         |    RoleIsTooLow     |            No             | Authorization |
+|                   Brak tokenu                    |      TokenLack      |            No             | Authorization |
 
 <br>
 <br>
