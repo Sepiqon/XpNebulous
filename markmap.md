@@ -87,7 +87,7 @@ Errors:
 
 <!--region csrf-->
 
-<img src="https://lh3.googleusercontent.com/u/0/d/1sYHJg5qUkZUbwiRyPdvjFFkblBv5wwKx=w1360-h657-iv1">
+<img src="https://lh3.googleusercontent.com/u/0/d/1NDs1HchVq83n35DItj9WPmQxmtNVQiXy=w1360-h657-iv1">
 
 Errors:
 
