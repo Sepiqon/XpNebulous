@@ -72,9 +72,12 @@ export class ChatComponent implements OnInit, AfterContentInit, AfterViewInit {
   @ViewChild("scr") scr: any;
   myScrollVariable = 0;
   ngOnInit() {
-    if (this.logged()) {
-      this.getme();
-    }
+    this.getCSFRtoken().then(() => {
+      if (this.logged()) {
+        this.getme();
+      }
+    });
+
   }
   messages: Array<Message> = new Array();
   value = '';
@@ -149,13 +152,9 @@ export class ChatComponent implements OnInit, AfterContentInit, AfterViewInit {
 
   async getCSFRtoken() {
     var that = this;
-
-    return that.createXHR_1_2("GET", "csfr", undefined, undefined, false, (res: ResponseReq) => {
-      console.log("test");
+    return that.createXHR_1_2("GET", "csfr", undefined, undefined, true, (res: ResponseReq) => {
       sessionStorage.setItem("sessionToken", res.req.getResponseHeader("csrf-token") as string);
     }, (res: ResponseReq) => {
-      console.log("ERROR PRZY POBIERANIU CSRF");
-      console.log(res);
     });
 
   }
@@ -209,7 +208,6 @@ export class ChatComponent implements OnInit, AfterContentInit, AfterViewInit {
       that.auth = res.data;
       that.name = res.data.name;
     }, (res: ResponseReq) => {
-      localStorage.removeItem("refreshToken");
       this.name = '';
       this.name2 = '';
     });
@@ -258,18 +256,20 @@ export class ChatComponent implements OnInit, AfterContentInit, AfterViewInit {
           data.message ? that.show(data.message, true) : that.show("ERROR!!!", true);
           switch (xhr.statusText) {
             case "TokenExpired":
-              that.getCSFRtoken().then(z => {
-                that.refreshToken().then(x => {
-                  resolve(that.createXHR_1_2(method, url, data, methodFun, refreshToken, sukcessCallBack, errorCallBack));
 
-                })
+              that.refreshToken().then(x => {
+                resolve(that.createXHR_1_2(method, url, dataInput, methodFun, refreshToken, sukcessCallBack, errorCallBack));
+
               });
 
               break;
             default:
-              if (xhr.statusText.replace("CS", "") != xhr.statusText) {
+              if (xhr.getResponseHeader("Error") == "unsafe") {
+                localStorage.removeItem("refreshToken");
+
+              } else if (xhr.statusText.replace("CS", "") != xhr.statusText) {
                 that.getCSFRtoken().then(z => {
-                  resolve(that.createXHR_1_2(method, url, data, methodFun, refreshToken, sukcessCallBack, errorCallBack));
+                  resolve(that.createXHR_1_2(method, url, dataInput, methodFun, refreshToken, sukcessCallBack, errorCallBack));
                 });
               }
               errorCallBack(new ResponseReq(data, xhr));
@@ -277,7 +277,7 @@ export class ChatComponent implements OnInit, AfterContentInit, AfterViewInit {
               break;
           }
         } else {
-          data.message ? that.show(data.message, false) : that.show("SUKCESS!!!", false);
+          if (data.message) that.show(data.message, false);
           sukcessCallBack(new ResponseReq(data, xhr));
           resolve(new ResponseReq(data, xhr));
         }
@@ -296,7 +296,10 @@ export class ChatComponent implements OnInit, AfterContentInit, AfterViewInit {
         that.getCSFRtoken();
       }
       if (refreshToken == true) {
-        xhr.setRequestHeader("refreshToken", localStorage.getItem("refreshToken") as string);
+        if (localStorage.getItem("refreshToken")) {
+          xhr.setRequestHeader("refreshToken", localStorage.getItem("refreshToken") as string);
+        }
+
       }
       if (refreshToken) {
         xhr.send(JSON.stringify({ refreshToken: refreshToken }));
