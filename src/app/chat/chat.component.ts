@@ -21,6 +21,9 @@ export class ResponseReq {
 export class ChatComponent implements OnInit, AfterContentInit, AfterViewInit {
 
   constructor(private ws: WsService, private modalService: NgbModal, private notificationService: NotificationService) { }
+
+
+
   name = '';
   name2 = '';
   login = new FormGroup({
@@ -33,6 +36,16 @@ export class ChatComponent implements OnInit, AfterContentInit, AfterViewInit {
     "email": new FormControl("", [Validators.email, Validators.required]),
   });
   auth: any = {};
+  @ViewChild("scr") scr: any;
+  myScrollVariable = 0;
+  messages: Array<Message> = new Array();
+  value = '';
+  closeResult = '';
+  toLoginout = false;
+  togetme = false;
+  onlines: Online[] = []
+
+
   ngAfterViewInit(): void {
     var that = this;
     this.ws.connect("wiadomosci", "send", async function (data: any) {
@@ -67,23 +80,14 @@ export class ChatComponent implements OnInit, AfterContentInit, AfterViewInit {
   ngAfterContentInit(): void {
 
   }
-
-
-  @ViewChild("scr") scr: any;
-  myScrollVariable = 0;
   ngOnInit() {
     this.getCSFRtoken().then(() => {
       if (this.logged()) {
         this.getme();
       }
     });
-
+    this.getOnlines();
   }
-  messages: Array<Message> = new Array();
-  value = '';
-  closeResult = '';
-  toLoginout = false;
-  togetme = false;
   send() {
     if (this.value !== '') {
       var model = new Message();
@@ -112,6 +116,9 @@ export class ChatComponent implements OnInit, AfterContentInit, AfterViewInit {
 
 
   }
+  datefromnumber(date: number) {
+    return this.date(new Date(date));
+  }
   uname() {
     this.name = this.name2;
   }
@@ -127,10 +134,6 @@ export class ChatComponent implements OnInit, AfterContentInit, AfterViewInit {
 
 
   }
-
-
-
-
   async openLogin(content: any) {
     var that = this;
     await this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then(async (result) => {
@@ -148,8 +151,6 @@ export class ChatComponent implements OnInit, AfterContentInit, AfterViewInit {
 
     });
   }
-
-
   async getCSFRtoken() {
     var that = this;
     return that.createXHR_1_2("GET", "csfr", undefined, undefined, true, (res: ResponseReq) => {
@@ -206,13 +207,23 @@ export class ChatComponent implements OnInit, AfterContentInit, AfterViewInit {
 
     return await that.createXHR_1_2("GET", "getme", undefined, undefined, false, (res: ResponseReq) => {
       that.auth = res.data;
-      that.name = res.data.name;
+      that.name = (res.data as User).name;
     }, (res: ResponseReq) => {
       this.name = '';
       this.name2 = '';
     });
   }
+  async getOnlines() {
+    var that = this;
 
+    return await that.createXHR_1_2("GET", "getme", undefined, "ONLINE", false, (res: ResponseReq) => {
+      that.onlines = [];
+      (res.data as Online[]).forEach(v => {
+        that.onlines.push(v);
+      })
+    }, (res: ResponseReq) => {
+    });
+  }
   async loginout() {
 
     var that = this;
@@ -233,10 +244,6 @@ export class ChatComponent implements OnInit, AfterContentInit, AfterViewInit {
       this.loginout();
     });
   }
-
-
-
-
   async createXHR_1_2(method: string, url: string, dataInput: any, methodFun: string | undefined, refreshToken: boolean, sukcessCallBack: (res: ResponseReq) => void, errorCallBack: (res: ResponseReq) => void): Promise<ResponseReq> {
     var that = this;
     return new Promise<ResponseReq>((resolve, reject) => {
@@ -314,9 +321,20 @@ export class ChatComponent implements OnInit, AfterContentInit, AfterViewInit {
   }
 
 }
+export interface User {
+  _id: string;
+  name: string;
+  password: string;
+  email: string;
+  role: number;
+}
 
-
-
+export interface Online {
+  _id: string;
+  user: User;
+  date: number;
+  isOnline: boolean;
+}
 
 
 

@@ -34,10 +34,12 @@
 
         <div class="card">
           <div class="btn-group" role="group" aria-label="Basic example">
-            <button *ngIf="!logged()" class="btn btn-lg btn-outline-primary" (click)="openLogin(loginform)">Zaloguj</button>
+            <button *ngIf="!logged()" class="btn btn-lg btn-outline-primary"
+              (click)="openLogin(loginform)">Zaloguj</button>
 
 
-          <button *ngIf="!logged()" class="btn btn-lg btn-outline-primary" (click)="openRegister(registerform)">Zarejestruj</button>
+            <button *ngIf="!logged()" class="btn btn-lg btn-outline-primary"
+              (click)="openRegister(registerform)">Zarejestruj</button>
           </div>
 
           <button *ngIf="logged()" class="btn btn-lg btn-outline-primary" (click)="loginout()">Wyloguj</button>
@@ -60,14 +62,6 @@
               </div>
             </div>
 
-            <div class="action_menu">
-              <ul>
-                <li><i class="fas fa-user-circle"></i> View profile</li>
-                <li><i class="fas fa-users"></i> Add to close friends</li>
-                <li><i class="fas fa-plus"></i> Add to group</li>
-                <li><i class="fas fa-ban"></i> Block</li>
-              </ul>
-            </div>
           </div>
           <div class="card-body msg_card_body" #scr [scrollTop]="myScrollVariable">
             <div *ngFor="let message of messages">
@@ -77,18 +71,18 @@
               <div *ngIf="!(this.name===message.name)" class="d-flex justify-content-start mb-4">
 
 
-                <div  class="img_cont_msg">
-                  <img [src]="'assets/1.png'"  class="rounded-circle user_img_msg">
+                <div class="img_cont_msg">
+                  <img [src]="'assets/1.png'" class="rounded-circle user_img_msg">
                 </div>
 
-                <div *ngIf="message.auth" class="msg_cotainer" style="background-color:greenyellow;" >
+                <div *ngIf="message.auth" class="msg_cotainer" style="background-color:greenyellow;">
                   <span class="msg_time"
                     style="bottom: auto;top: -13px; font-size: 10px; color: rgba(0, 0, 0, 0.801)">{{message.name}}</span>
                   {{message.message}}
                   <span class="msg_time">{{this.date(message.date)}}</span>
                 </div>
 
-                <div *ngIf="!message.auth" class="msg_cotainer" >
+                <div *ngIf="!message.auth" class="msg_cotainer">
                   <span class="msg_time"
                     style="bottom: auto;top: -13px; font-size: 10px; color: rgba(0, 0, 0, 0.801)">{{message.name}}</span>
                   {{message.message}}
@@ -133,6 +127,52 @@
             </div>
           </div>
         </div>
+
+
+        <div class="card" style="height: auto;margin: auto;width: max-content;margin-top: 50px;">
+          <div class="card-header msg_head">
+            <div class="d-flex bd-highlight">
+              <div class="user_info">
+                <span>Uzytkownicy online</span>
+                <p>Jest nas {{this.onlines.length}}</p>
+              </div>
+            </div>
+
+          </div>
+          <div class="card-body msg_card_body" #scr [scrollTop]="myScrollVariable">
+            <div *ngFor="let online of onlines">
+
+
+
+              <div class="d-flex justify-content-start mb-4">
+
+
+
+
+                <div *ngIf="online.isOnline" class="msg_cotainer" style="background-color:greenyellow;">
+                  <span class="msg_time"
+                    style="bottom: auto;top: -13px; font-size: 10px; color: rgba(0, 0, 0, 0.801)">Online</span>
+                  {{online.user.name}}
+                </div>
+                <div *ngIf="!online.isOnline" class="msg_cotainer" style="background-color:rgb(255, 106, 47);">
+                  <span class="msg_time"
+                    style="bottom: auto;top: -13px; font-size: 10px; color: rgba(0, 0, 0, 0.801)">Nie online</span>
+                  {{online.user.name}}
+                  <span class="msg_time">{{this.datefromnumber(online.date)}}</span>
+                </div>
+
+              </div>
+
+
+
+            </div>
+
+
+
+
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -163,19 +203,20 @@
       <div class="form-group">
         <div class="input-group">
           <div class="input-group-prepend">
-            <div class="input-group-text"  id="btnGroupAddon">Login</div>
+            <div class="input-group-text" id="btnGroupAddon">Login</div>
           </div>
-          <input type="text" formControlName="name"   class="form-control">
+          <input type="text" formControlName="name" class="form-control">
         </div>
         <div class="input-group" style="margin-top: 25px;">
           <div class="input-group-prepend">
             <div class="input-group-text" id="btnGroupAddon">Hasło</div>
           </div>
-          <input type="password" formControlName="password"  class="form-control">
+          <input type="password" formControlName="password" class="form-control">
         </div>
       </div>
       <div class="modal-footer">
-        <button type="submit" [disabled]="!login.valid" class="btn btn-outline-dark" (click)="modal.close(this.login)">Zaloguj</button>
+        <button type="submit" [disabled]="!login.valid" class="btn btn-outline-dark"
+          (click)="modal.close(this.login)">Zaloguj</button>
       </div>
     </form>
   </div>
@@ -194,28 +235,29 @@
   <div class="modal-body">
     <form [formGroup]="register">
       <div class="form-group">
-        <div class="input-group" >
+        <div class="input-group">
           <div class="input-group-prepend">
-            <div class="input-group-text"  id="btnGroupAddon">Email</div>
+            <div class="input-group-text" id="btnGroupAddon">Email</div>
           </div>
-          <input type="text" formControlName="email"   class="form-control">
+          <input type="text" formControlName="email" class="form-control">
         </div>
         <div class="input-group" style="margin-top: 25px;">
           <div class="input-group-prepend">
-            <div class="input-group-text"  id="btnGroupAddon">Login</div>
+            <div class="input-group-text" id="btnGroupAddon">Login</div>
           </div>
-          <input type="text" formControlName="name"   class="form-control">
+          <input type="text" formControlName="name" class="form-control">
         </div>
 
         <div class="input-group" style="margin-top: 25px;">
           <div class="input-group-prepend">
             <div class="input-group-text" id="btnGroupAddon">Hasło</div>
           </div>
-          <input type="password" formControlName="password"  class="form-control">
+          <input type="password" formControlName="password" class="form-control">
         </div>
       </div>
       <div class="modal-footer">
-        <button type="submit" [disabled]="!register.valid" class="btn btn-outline-dark" (click)="modal.close(this.register)">Zarejestruj</button>
+        <button type="submit" [disabled]="!register.valid" class="btn btn-outline-dark"
+          (click)="modal.close(this.register)">Zarejestruj</button>
       </div>
     </form>
   </div>
